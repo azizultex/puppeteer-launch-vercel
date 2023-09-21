@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const puppeteer = require('puppeteer-core');
-const chrome = require('chrome-aws-lambda');
+const puppeteer = require('puppeteer');
 
 const app = express();
 const port = 3000;
@@ -18,9 +17,7 @@ app.get('/get-title', async (req, res) => {
     let browser = null;
     try {
         browser = await puppeteer.launch({
-            args: chrome.args,
-            executablePath: await chrome.executablePath,
-            headless: chrome.headless,
+            headless: 'new'
         });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'domcontentloaded' });
