@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const puppeteer = require('puppeteer');
+const chromium = require('@sparticuz/chromium-min');
+const puppeteer = require('puppeteer-core');
 
 const app = express();
 const port = 3000;
@@ -14,26 +15,18 @@ app.get('/get-title', async (req, res) => {
         return res.status(400).send({ error: 'URL parameter is required' });
     }
 
-    let browser;
-    let puppeteer;
 
-    if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-      // running on the Vercel platform.
-      browser = require('chrome-aws-lambda');
-      puppeteer = require('puppeteer-core');
-    } else {
-      // running locally.
-      puppeteer = require('puppeteer');
-    }
-
+    let browser = null;
 
     try {
         browser = await puppeteer.launch({
-          args: [...browser.args, '--hide-scrollbars', '--disable-web-security'],
-          defaultViewport: browser.defaultViewport,
-          executablePath: await browser.executablePath,
-          headless: true,
-          ignoreHTTPSErrors: true,
+            args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
+            defaultViewport: chromium.defaultViewport,
+            executablePath: await chromium.executablePath(
+              `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
+            ),
+            headless: chromium.headless,
+            ignoreHTTPSErrors: true,
         });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'domcontentloaded' });
