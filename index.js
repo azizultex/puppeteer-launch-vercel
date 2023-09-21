@@ -18,7 +18,7 @@ app.get('/get-title', async (req, res) => {
     let browser = null;
 
     try {
-        browser = await puppeteer.launch({
+        browser = await puppeteer.connect({
             browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
         });
         const page = await browser.newPage();
