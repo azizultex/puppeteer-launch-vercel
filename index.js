@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const chromium = require('@sparticuz/chromium-min');
 const puppeteer = require('puppeteer-core');
 
 const app = express();
@@ -20,13 +19,7 @@ app.get('/get-title', async (req, res) => {
 
     try {
         browser = await puppeteer.launch({
-            args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
-            defaultViewport: chromium.defaultViewport,
-            executablePath: await chromium.executablePath(
-              `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
-            ),
-            headless: chromium.headless,
-            ignoreHTTPSErrors: true,
+            browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
         });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'domcontentloaded' });
