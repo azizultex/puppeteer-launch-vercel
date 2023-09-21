@@ -14,10 +14,26 @@ app.get('/get-title', async (req, res) => {
         return res.status(400).send({ error: 'URL parameter is required' });
     }
 
-    let browser = null;
+    let browser;
+    let puppeteer;
+
+    if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+      // running on the Vercel platform.
+      browser = require('chrome-aws-lambda');
+      puppeteer = require('puppeteer-core');
+    } else {
+      // running locally.
+      puppeteer = require('puppeteer');
+    }
+
+
     try {
         browser = await puppeteer.launch({
-            headless: 'new'
+          args: [...browser.args, '--hide-scrollbars', '--disable-web-security'],
+          defaultViewport: browser.defaultViewport,
+          executablePath: await browser.executablePath,
+          headless: true,
+          ignoreHTTPSErrors: true,
         });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'domcontentloaded' });
