@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer-core');
@@ -26,6 +27,7 @@ app.get('/get-title', async (req, res) => {
         const title = await page.title();
         res.send({ title });
     } catch (error) {
+        console.log(error);
         res.status(500).send({ error: 'Failed to fetch the website title' });
     } finally {
         if (browser) {
