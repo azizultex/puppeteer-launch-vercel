@@ -32,7 +32,7 @@ app.get('/get-title', async (req, res) => {
                 : puppeteer.executablePath()
           });
         const page = await browser.newPage();
-        await page.goto(url, { waitUntil: 'DOMContentLoaded' }); // networkidle0, load, DOMContentLoaded
+        await page.goto(url, { waitUntil: 'domcontentloaded' }); // networkidle0, load, domcontentloaded
         const title = await page.title();
         res.send({ title });
     } catch (error) {
