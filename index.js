@@ -31,10 +31,9 @@ app.get('/get-title', async (req, res) => {
                 ? process.env.PUPPETEER_EXECUTABLE_PATH
                 : puppeteer.executablePath(),
             headless: "new",
-            ignoreHTTPSErrors: true,
           });
         const page = await browser.newPage();
-        await page.goto(url, { waitUntil: 'domcontentloaded' });
+        await page.goto(url, { waitUntil: 'load' }); // DOMContentLoaded
         const title = await page.title();
         res.send({ title });
     } catch (error) {
