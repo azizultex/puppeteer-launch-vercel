@@ -1,10 +1,10 @@
-require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer-core');
+require('dotenv').config();
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 4000;
 
 app.use(bodyParser.json());
 
@@ -19,9 +19,20 @@ app.get('/get-title', async (req, res) => {
     let browser = null;
 
     try {
-        browser = await puppeteer.connect({
-            browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
-        });
+          const browser = await puppeteer.launch({
+            args: [
+              "--disable-setuid-sandbox",
+              "--no-sandbox",
+              "--single-process",
+              "--no-zygote",
+            ],
+            executablePath:
+              process.env.NODE_ENV === "production"
+                ? process.env.PUPPETEER_EXECUTABLE_PATH
+                : puppeteer.executablePath(),
+            headless: true,
+            ignoreHTTPSErrors: true,
+          });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'domcontentloaded' });
         const title = await page.title();
@@ -37,6 +48,6 @@ app.get('/get-title', async (req, res) => {
 });
 
 
-app.listen(port, () => {
-    console.log(`Server started on http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Server started on http://localhost:${PORT}`);
 });
