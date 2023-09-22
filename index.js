@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer');
 require('dotenv').config();
 
 const app = express();
@@ -30,7 +30,7 @@ app.get('/get-title', async (req, res) => {
               process.env.NODE_ENV === "production"
                 ? process.env.PUPPETEER_EXECUTABLE_PATH
                 : puppeteer.executablePath(),
-            headless: true,
+            headless: "new",
             ignoreHTTPSErrors: true,
           });
         const page = await browser.newPage();
