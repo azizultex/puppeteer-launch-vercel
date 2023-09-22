@@ -29,7 +29,8 @@ app.get('/get-title', async (req, res) => {
             executablePath:
               process.env.NODE_ENV === "production"
                 ? process.env.PUPPETEER_EXECUTABLE_PATH
-                : puppeteer.executablePath()
+                : puppeteer.executablePath(),
+            headless: "new"
           });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'domcontentloaded' }); // networkidle0, load, domcontentloaded
