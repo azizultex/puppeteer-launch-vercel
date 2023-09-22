@@ -29,11 +29,10 @@ app.get('/get-title', async (req, res) => {
             executablePath:
               process.env.NODE_ENV === "production"
                 ? process.env.PUPPETEER_EXECUTABLE_PATH
-                : puppeteer.executablePath(),
-            headless: "new",
+                : puppeteer.executablePath()
           });
         const page = await browser.newPage();
-        await page.goto(url, { waitUntil: 'networkidle0' }); // load, DOMContentLoaded
+        await page.goto(url, { waitUntil: 'DOMContentLoaded' }); // networkidle0, load, DOMContentLoaded
         const title = await page.title();
         res.send({ title });
     } catch (error) {
