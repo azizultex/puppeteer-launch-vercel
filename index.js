@@ -33,7 +33,7 @@ app.get('/get-title', async (req, res) => {
             headless: "new",
           });
         const page = await browser.newPage();
-        await page.goto(url, { waitUntil: 'load' }); // DOMContentLoaded
+        await page.goto(url, { waitUntil: 'networkidle0' }); // load, DOMContentLoaded
         const title = await page.title();
         res.send({ title });
     } catch (error) {
